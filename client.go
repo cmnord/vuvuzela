@@ -149,7 +149,8 @@ func (c *Client) convoRoundError(conn typesocket.Conn, v coordinator.RoundError)
 func (c *Client) newConvoRound(conn typesocket.Conn, v coordinator.NewRound) {
 	c.setLatestRound(v.Round)
 
-	if time.Until(v.EndTime) < 20*time.Millisecond {
+	latency := conn.(*typesocket.ClientConn).Latency()
+	if time.Until(v.EndTime) < latency {
 		c.Handler.DebugError(errors.New("newConvoRound %d: skipping round (only %s left)", v.Round, time.Until(v.EndTime)))
 		return
 	}
@@ -215,12 +216,15 @@ func (c *Client) runRound(conn typesocket.Conn, st *roundState, v coordinator.Ne
 		}
 	}
 
-	if time.Until(v.EndTime) < c.CoordinatorLatency {
+	latency := conn.(*typesocket.ClientConn).Latency()
+	c.Handler.DebugError(errors.New("latency is %s", latency))
+
+	if time.Until(v.EndTime) < latency {
 		c.Handler.DebugError(errors.New("runRound %d: skipping round (only %s left)", v.Round, time.Until(v.EndTime)))
 		return
 	}
 
-	time.Sleep(time.Until(v.EndTime) - c.CoordinatorLatency - 10*time.Millisecond)
+	time.Sleep(time.Until(v.EndTime) - latency - 10*time.Millisecond)
 
 	outgoing := c.Handler.Outgoing(round)
 	onionKeys := make([][]*[32]byte, len(outgoing))
@@ -234,7 +238,7 @@ func (c *Client) runRound(conn typesocket.Conn, st *roundState, v coordinator.Ne
 	st.OnionKeys = onionKeys
 	st.mu.Unlock()
 
-	if time.Until(v.EndTime) < 10*time.Millisecond {
+	if time.Until(v.EndTime) < latency {
 		c.Handler.DebugError(errors.New("runRound %d: abandoning round (only %s left)", round, time.Until(v.EndTime)))
 		return
 	}
