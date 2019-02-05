@@ -24,8 +24,7 @@ import (
 )
 
 type Client struct {
-	PersistPath        string
-	CoordinatorLatency time.Duration // Eventually we will measure this.
+	PersistPath string
 
 	ConfigClient *config.Client
 	Handler      ConvoHandler

@@ -45,7 +45,6 @@ func main() {
 
 	alpenhornClient, isNewAlpClient := LoadAlpenhornState(confHome, *username)
 	vuvuzelaClient, isNewVuvuzelaClient := LoadVuvuzelaState(confHome, *username)
-	vuvuzelaClient.CoordinatorLatency = *latency
 
 	gc := &GuiClient{
 		myName:          alpenhornClient.Username,
