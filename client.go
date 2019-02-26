@@ -76,7 +76,7 @@ func (c *Client) ConnectConvo() (chan error, error) {
 	wsAddr := fmt.Sprintf("wss://%s/convo/ws", convoInner.Coordinator.Address)
 	conn, err := typesocket.Dial(wsAddr, convoInner.Coordinator.Key)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "dialing websocket")
 	}
 
 	c.mu.Lock()
