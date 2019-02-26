@@ -281,7 +281,7 @@ func (srv *Server) loop() {
 	atomic.AddUint32(&srv.round, 100)
 
 	lastDeadline := time.Now()
-	for _ = range flights {
+	for range flights {
 		round := atomic.AddUint32(&srv.round, 1)
 
 		// Persist every 20 rounds.
