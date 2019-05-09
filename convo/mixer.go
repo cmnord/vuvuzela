@@ -16,13 +16,17 @@ import (
 )
 
 const (
-	SizeMessageBody          = 240
+	// SizeMessageBody is in bytes.
+	SizeMessageBody = 240
+	// SizeEncryptedMessageBody is in bytes and includes overhead.
 	SizeEncryptedMessageBody = SizeMessageBody + box.Overhead
 	sizeDeadDropMessage      = int(unsafe.Sizeof(DeadDropMessage{}))
 )
 
+// DeadDrop specifies a dead drop location.
 type DeadDrop [16]byte
 
+// DeadDropMessage is a single encrypted message at a specific dead drop.
 type DeadDropMessage struct {
 	DeadDrop         DeadDrop
 	EncryptedMessage [SizeEncryptedMessageBody]byte
@@ -49,6 +53,7 @@ type ConvoService struct {
 	AccessCounts chan AccessCount
 }
 
+// AccessCount counts the number of single and double messages in a message batch.
 type AccessCount struct {
 	Singles int64
 	Doubles int64

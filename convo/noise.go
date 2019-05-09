@@ -10,6 +10,7 @@ import (
 	"vuvuzela.io/crypto/rand"
 )
 
+// FillWithFakeSingles fills dest with noise messages, each with a random dead drop.
 func FillWithFakeSingles(dest [][]byte, nonce *[24]byte, nextKeys []*[32]byte) {
 	concurrency.ParallelFor(len(dest), func(p *concurrency.P) {
 		for i, ok := p.Next(); ok; i, ok = p.Next() {
@@ -21,6 +22,7 @@ func FillWithFakeSingles(dest [][]byte, nonce *[24]byte, nextKeys []*[32]byte) {
 	})
 }
 
+// FillWithFakeDoubles fills dest with noise messages, where pairs of noise messages have the same dead drop.
 func FillWithFakeDoubles(dest [][]byte, nonce *[24]byte, nextKeys []*[32]byte) {
 	concurrency.ParallelFor(len(dest)/2, func(p *concurrency.P) {
 		for i, ok := p.Next(); ok; i, ok = p.Next() {
