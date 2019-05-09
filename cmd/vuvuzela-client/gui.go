@@ -23,6 +23,7 @@ import (
 	"vuvuzela.io/vuvuzela/convo"
 )
 
+// NumOutgoing is the maximum number of allowed conversations at any time.
 const NumOutgoing = 5
 
 type GuiClient struct {
@@ -46,6 +47,7 @@ type pendingRound struct {
 	activeConvos []*Conversation
 }
 
+// Outgoing gets the next up to NumOutgoing messages for all the active conversations.
 func (gc *GuiClient) Outgoing(round uint32) []*convo.DeadDropMessage {
 	out := make([]*convo.DeadDropMessage, 0, NumOutgoing)
 

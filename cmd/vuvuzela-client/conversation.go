@@ -111,6 +111,7 @@ func (cm *ConvoMessage) Unmarshal(msg []byte) error {
 	return nil
 }
 
+// QueueTextMessage appends msg to the out queue and increments the relative sequence number.
 func (c *Conversation) QueueTextMessage(msg []byte) {
 	c.Lock()
 	c.outQueue = append(c.outQueue, seqMsg{
@@ -375,6 +376,8 @@ func (c *Conversation) Solo() bool {
 	return c.peerUsername == c.myUsername
 }
 
+// Seal encrypts and authenticates message with roundKey and a nonce based on round
+// and a hash of the peer's username and returns the ciphertext.
 func (c *Conversation) Seal(message []byte, round uint32, roundKey *[32]byte) []byte {
 	var nonce [24]byte
 	binary.BigEndian.PutUint32(nonce[:], round)
